@@ -1,46 +1,18 @@
 from .models import Notification
-from .email_service import send_notification_email
-from .sms_service import send_notification_sms
 
 
-def create_notification(user, notification_type, reference_id=None):
-    """
-    Reusable function to create notifications + send email + send SMS
-    """
-
-    # Auto title + message based on type
-    if notification_type == Notification.NotificationType.SHIPMENT_ASSIGNED:
-        title = "Shipment Assigned"
-        message = "A shipment has been assigned to you."
-
-    elif notification_type == Notification.NotificationType.DELIVERY_UPDATE:
-        title = "Delivery Status Updated"
-        message = "Your shipment delivery status has been updated."
-
-    elif notification_type == Notification.NotificationType.PAYMENT_RECEIVED:
-        title = "Payment Received"
-        message = "Payment has been successfully received."
-
-    elif notification_type == Notification.NotificationType.PAYOUT_PROCESSED:
-        title = "Payout Processed"
-        message = "Your payout has been processed."
-
-    else:
-        return None
-
-    # Create notification in DB
-    notification = Notification.objects.create(
+def create_notification(user, title, message, type="general"):
+    return Notification.objects.create(
         user=user,
         title=title,
         message=message,
-        type=notification_type,
-        reference_id=reference_id
+        type=type,
     )
 
-    # Send Email
-    send_notification_email(user, title, message)
 
-    # Send SMS (mock)
-    send_notification_sms(user, message)
+def mark_all_as_read(user):
+    return Notification.objects.filter(user=user, is_read=False).update(is_read=True)
 
-    return notification
+
+def unread_count(user):
+    return Notification.objects.filter(user=user, is_read=False).count()

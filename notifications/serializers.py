@@ -7,6 +7,4 @@ class NotificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification
         fields = "__all__"
-        extra_kwargs = {
-            "user": {"required": False}
-        }
+        read_only_fields = ("user", "created_at")
