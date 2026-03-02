@@ -3,6 +3,10 @@ import { loginUser } from '../api/authApi';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { FaWrench, FaCarSide } from 'react-icons/fa';
+import { GiTireIronCross } from 'react-icons/gi';
+import AuthBackground from '../components/AuthBackground';
 
 export default function Login() {
   const {
@@ -32,12 +36,25 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-indigo-600 transition-all duration-500">
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="bg-white p-8 rounded-2xl shadow-2xl w-96 transform transition duration-500 hover:scale-105"
-      >
-        <h2 className="text-2xl font-bold mb-6 text-center">Welcome Back</h2>
+    <div className="relative min-h-screen flex items-center justify-center bg-black overflow-hidden">
+      <AuthBackground />
+      <div className="absolute top-10 left-10 animate-bounce text-cyan-400 text-3xl">
+        <FaWrench />
+      </div>
+      <div className="absolute bottom-10 right-10 animate-pulse text-yellow-400 text-3xl">
+        <FaCarSide />
+      </div>
+      <div className="absolute top-1/2 left-5 animate-spin text-gray-400 text-2xl">
+        <GiTireIronCross />
+      </div>
+
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <motion.div
+          whileHover={{ rotateX: 5, rotateY: -5 }}
+          transition={{ type: 'spring', stiffness: 100 }}
+          className="backdrop-blur-xl bg-white/10 border border-white/20 p-8 rounded-2xl shadow-2xl w-96 text-white"
+        >
+          <h2 className="text-3xl font-bold mb-6 text-center tracking-wide">Vehicle Service Login</h2>
 
         {/* Email */}
         <input
@@ -50,7 +67,7 @@ export default function Login() {
               message: 'Invalid email format',
             },
           })}
-          className="w-full p-3 mb-1 border rounded-lg"
+          className="w-full p-3 mb-1 border rounded-lg bg-white/90 text-black placeholder:text-gray-500"
         />
         {errors.email && <p className="text-red-500 text-sm mb-3">{errors.email.message}</p>}
 
@@ -66,7 +83,7 @@ export default function Login() {
                 message: 'Minimum 6 characters required',
               },
             })}
-            className="w-full p-3 mb-1 border rounded-lg"
+            className="w-full p-3 mb-1 border rounded-lg bg-white/90 text-black placeholder:text-gray-500"
           />
           <span
             onClick={() => setShowPassword(!showPassword)}
@@ -78,17 +95,18 @@ export default function Login() {
         {errors.password && <p className="text-red-500 text-sm mb-4">{errors.password.message}</p>}
 
         {/* Button */}
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-indigo-600 text-white py-3 rounded-lg hover:bg-indigo-700 transition duration-300 flex items-center justify-center"
-        >
-          {loading ? (
-            <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
-          ) : (
-            'Login'
-          )}
-        </button>
+          <button
+            type="submit"
+            disabled={loading}
+            className="metal-btn glow w-full flex items-center justify-center"
+          >
+            {loading ? (
+              <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></div>
+            ) : (
+              'Login'
+            )}
+          </button>
+        </motion.div>
       </form>
     </div>
   );
